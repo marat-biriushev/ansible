@@ -1,0 +1,23 @@
+---
+
+- name: Generate INDEX.HTML
+  template: src=index.j2 dest={{ destin_folder}}/index.html
+  notify:
+    - Restart Apache RedHat
+    - Restart Apache Debian
+- debug:
+    msg: "Variable destin_folder is {{ destin_folder }}"
+- name: Copy MyWebSite to Apache for RedHat
+  copy:
+    src: "{{ item }}"
+    dest: "{{ destin_folder }}"
+    mode: "555"
+  loop:
+    - "download.jpeg"
+    - "download1.jpeg"
+    - "download2.jpeg"
+    - "download3.jpeg"
+
+  notify:
+    - Restart Apache RedHat
+    - Restart Apache Debian

@@ -1,0 +1,38 @@
+---
+- name: Ansible error handling
+  hosts: "{{ HOST }}"
+  become: yes
+  any_errors_fatal: true # To stop running playbook on all hosts if one is failed
+
+  tasks:
+
+  - block: ######## RedHat ########
+    - name: Task 1 RedHat
+      yum: name=treee state=latest
+      ignore_errors: yes # Ingnore if fails
+    when: ansible_os_family == "RedHat"
+
+  - block: ######## RedHat ########
+    - name: Task 1 RedHat
+      apt: name=treee state=latest
+      ignore_errors: yes # Ingnore if fails
+    when: ansible_os_family == "Debian"
+
+  - name: Task 2
+    shell: ls -lah /etc/
+    register: res
+    failed_when: res.rc != 0 # Condition for failing the task
+#    failed_when: "'passwd' not in res.stdout"
+  - debug:
+      var: res.rc
+  
+  - name: Task 3
+    shell: cat /home/vagrant/test.txt
+    register: result
+  - debug:
+      var: result.stdout
+
+  - name: Task 4
+    shell: echo privet
+  - name: Tack 5
+    shell: echo ppprivvet

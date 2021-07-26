@@ -1,0 +1,35 @@
+---
+- name: Vars lesson
+  hosts: WEB
+  become: no
+
+  vars:
+    var1: Hello
+    var2: World
+    var3: "!"
+
+  tasks:
+  - name: Print vars
+    debug: 
+      var: var1, var2, var3
+   
+  - debug:
+      msg: "Variables are:  {{ var1, var2, var3 }}"
+  - debug:
+      msg: "Owner is: {{ owner }}, var is from group_vars"
+
+  - set_fact: new_var="{{ var1 }} {{ owner }}{{ var3 }}"
+
+  - debug: 
+      msg: "new variable is: {{ new_var }}"
+
+  - debug: 
+      var: ansible_os_family
+  - debug: 
+      var: ansible_distribution
+  
+  - shell: uptime
+    register: result
+
+  - debug:
+      var:  result.stdout

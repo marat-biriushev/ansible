@@ -1,0 +1,30 @@
+---
+- name: Loop playbook
+  hosts: node-1
+  become: yes
+  
+  tasks:
+  - name: Say hello to all
+    debug: msg="Hello {{ item }}"
+    loop:
+      - "Marat"
+      - "Alma"
+#****************UNTIL****************
+  - name: Until loop
+    shell: echo -n Z >> file.txt && cat file.txt
+    register: output
+    delay: 2
+    retries: 10
+    until: output.stdout.find("ZZZZZZZZZ") == false
+  
+  - name: Print final Output
+    debug:
+      var: output.stdout
+#****************UNTIL****************  
+  - name: Install packeges
+    yum: 
+      name: "{{ item }}"
+      state: present
+    loop:
+      - "vim"
+      - "tree" 

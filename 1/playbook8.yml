@@ -1,0 +1,19 @@
+---
+- name: test delegate
+  hosts: WEB
+  become: yes
+
+  tasks:
+
+  - shell: hostname
+    register: results
+
+  - debug: 
+      var: results.stdout
+
+  - shell: hostname
+    register: results
+    delegate_to: node-1
+
+  - debug:
+      var: results.stdout 

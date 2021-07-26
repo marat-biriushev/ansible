@@ -1,0 +1,72 @@
+---
+- name: Install Apache and Upload my Web Page
+  hosts: WEB
+  become: yes
+
+  vars:
+    source_folder: ./website2
+    destin_folder: /var/www/html
+
+  tasks:
+    - name: Check and print Linux Family
+      debug:
+        var: ansible_os_family
+    - block: # ==================RedHat==================
+
+      - name: Install Apache for RedHat
+        yum:
+          name: httpd
+          state: latest
+  
+      - name: Start and Enable Apache for PedHat
+        service:
+          name: httpd
+          state: started
+          enabled: yes
+      when: ansible_os_family == "RedHat"
+
+    - block: # ==================Debian==================
+
+      - name: Install Apache for Debian
+        apt: name=apache2 state=latest
+    
+      - name: Start and Enable Apache for Debian
+        service: name=apache2 state=started enabled=yes
+      when: ansible_os_family == "Debian"
+    
+    - name: Generate INDEX.HTML
+      template: src={{ source_folder }}/index.j2 dest={{ destin_folder}}/index.html mode=055
+      notify:
+        - Restart Apache RedHat
+        - Restart Apache Debian
+      
+    - name: Copy MyWebSite to Apache for RedHat
+      copy:
+        src: "{{ source_folder }}/{{ item }}"
+        dest: "{{ destin_folder }}"
+        mode: "555"
+      loop: 
+#        - "index.html"
+        - "download.jpeg"
+        - "download1.jpeg"
+        - "download2.jpeg"
+        - "download3.jpeg"
+#      copy: src={{ item }} dest={{ destin_folder }}
+#      with_fileglob: "{{ source_folder }}/*.*"
+
+      notify: 
+        - Restart Apache RedHat
+        - Restart Apache Debian
+
+  handlers:
+  - name: Restart Apache RedHat
+    service:
+      name: httpd
+      state: restarted
+    when: ansible_os_family == "RedHat"
+
+  - name: Restart Apache Debian 
+    service:
+      name: apache2
+      state: restarted
+    when: ansible_os_family == "Debian"

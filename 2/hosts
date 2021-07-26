@@ -1,0 +1,9 @@
+[WEB]
+
+node-1 ansible_host=192.168.1.155
+node-2 ansible_host=192.168.1.150
+
+[WIND]
+
+win-1 ansible_host=192.168.1.4
+

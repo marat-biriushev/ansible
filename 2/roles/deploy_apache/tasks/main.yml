@@ -1,0 +1,7 @@
+---
+# tasks file for deploy_apache
+
+- include:
+    apache.yml
+- include:
+    web_site.yml

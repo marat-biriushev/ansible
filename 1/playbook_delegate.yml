@@ -1,0 +1,38 @@
+---
+- name: My Playbook
+  hosts: WEB
+  become: yes
+
+  vars: 
+    mytxt: "PRIVET"
+
+  tasks:
+  
+  - name: Ping
+    ping:
+  
+  - name: Unregister Server from LB
+    shell: echo This server {{ inventory_hostname}} unregistered, Node {{ansible_nodename  }} >> /home/log.txt
+    delegate_to: 127.0.0.1
+      become: yes
+      user: marat
+
+  - name: Create File1 
+    copy:
+      dest: /home/file1
+      content: |
+        First Line
+        Hello
+        {{ mytxt }}
+    delegate_to: node-1
+
+  - name: Create File2
+    copy: 
+      dest: /home/file2
+      content: |
+        First Line
+        Hello
+        {{ mytxt }}. IIIII
+
+
+

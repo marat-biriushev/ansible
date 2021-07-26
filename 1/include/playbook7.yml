@@ -1,0 +1,16 @@
+---
+- name: My Playbook
+  hosts: "{{ MYVAR }}" # ansible-playbook playbook7.yml -e "MYVAR=WEB"
+  become: yes
+
+  vars:
+    mytext: "PRIVETT"
+
+  tasks:
+  - name: Ping test
+    ping:
+
+  - include: create_folder.yml 
+
+  - include: create_file.yml
+

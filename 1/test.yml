@@ -1,0 +1,10 @@
+---
+- name: Install Apache and Upload my Web Page
+  hosts: WEB
+  become: yes
+
+  vars:
+    source_file: ./website/index.html
+    destin_file: /var/www/html
+    
+  
